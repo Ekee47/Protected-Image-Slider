@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8"> 
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-2c7831bb44f98c1391d6a4ffda0e1fd302503391ca806e7fcc7b9b87197aec26.js"></script>
+
+
+  <title>CodePen - Image Slider (JavaScript)</title>
+
+    <link rel="canonical" href="https://codepen.io/CodedByPiyush/pen/vYeLqaN">
+  
+  
+  <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.15.4/css/all.css'>
+  
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+html {
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+body {
+  width: 100%;
+  height: 100%;
+  color: #272727;
+  line-height: 1.9;
+  background-color: #f7f5f5;
+  font-family:Arial, Helvetica, sans-serif;
+}
+h2{
+    text-align: center;
+    font-size: 2rem;
+    line-height: 3.5;
+}
+.slider{
+    position: relative;
+     max-width: 40rem; 
+    height: 26.625rem; 
+    margin: 0 auto;
+    overflow: hidden;
+}
+.slide{ 
+    position: absolute;
+    top:0;
+    width: 100%;
+    height: 26.625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 1s;
+}
+.slide > img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+button{
+    background: none;
+    border: none;
+}
+button .fas{
+    color: rgba(255, 255, 255, .5);
+}
+.btn-slide{
+    position:absolute;
+    top:50%;
+    z-index: 10;
+
+    height: 5.5rem;
+    width: 5.5rem;
+    cursor: pointer;
+}
+.prev{
+    left:3rem;
+    transform: translate(-50%, -50%);
+}
+.next{
+    right: 3rem;
+    transform: translate(50%, -50%); 
+}
+.dots-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.dot{
+    width: 25px;
+    height: 5px;
+    margin: 15px 5px;
+    border-radius: .5rem;
+    background: rgba(39,39,39, .5);
+    cursor: pointer;
+}
+.dot.active{
+background:#272727;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <h2>Image slider</h2>
+    <div class="slider">
+      <div class="slide">
+            <img src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=876&q=80" alt="Photo1"/>
+        </div>
+      <div class="slide">
+            <img src="https://images.unsplash.com/photo-1619266465172-02a857c3556d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80" alt="Photo3"/>
+        </div> 
+      <div class="slide">
+            <img src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=876&q=80" alt="Photo2"/>
+        </div>
+      <div class="slide">
+            <img src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=876&q=80" alt="Photo3"/>
+        </div> 
+
+        <button class="btn-slide prev"><i class="fas fa-3x fa-chevron-circle-left"></i></button>
+        <button class="btn-slide next"><i class="fas fa-3x fa-chevron-circle-right"></i></button>
+      
+    </div>
+    <div class="dots-container">
+            <span class="dot active" data-slide="0"></span>
+            <span class="dot" data-slide="1"></span>
+            <span class="dot" data-slide="2"></span>
+      <span class="dot" data-slide="3"></span>
+    </div>
+  
+      <script id="rendered-js" >
+function Slider() {
+  const carouselSlides = document.querySelectorAll('.slide');
+  const btnPrev = document.querySelector('.prev');
+  const btnNext = document.querySelector('.next');
+  const dotsSlide = document.querySelector('.dots-container');
+  let currentSlide = 0;
+
+  const activeDot = function (slide) {
+    document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
+    document.querySelector(`.dot[data-slide="${slide}"]`).classList.add('active');
+  };
+  activeDot(currentSlide);
+
+  const changeSlide = function (slides) {
+    carouselSlides.forEach((slide, index) => slide.style.transform = `translateX(${100 * (index - slides)}%)`);
+  };
+  changeSlide(currentSlide);
+
+  btnNext.addEventListener('click', function () {
+    currentSlide++;
+    if (carouselSlides.length - 1 < currentSlide) {
+      currentSlide = 0;
+    };
+    changeSlide(currentSlide);
+    activeDot(currentSlide);
+  });
+  btnPrev.addEventListener('click', function () {
+    currentSlide--;
+    if (0 >= currentSlide) {
+      currentSlide = 0;
+    };
+    changeSlide(currentSlide);
+    activeDot(currentSlide);
+  });
+
+  dotsSlide.addEventListener('click', function (e) {
+    if (e.target.classList.contains('dot')) {
+      const slide = e.target.dataset.slide;
+      changeSlide(slide);
+      activeDot(slide);
+    }
+  });
+};
+Slider();
+//# sourceURL=pen.js
+    </script>
+
+  
+</body>
+
+</html>
